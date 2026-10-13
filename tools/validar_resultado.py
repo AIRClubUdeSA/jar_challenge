@@ -15,8 +15,16 @@ def es_numero(x):
     return isinstance(x, (int, float)) and not isinstance(x, bool)
 
 
+def es_entero(x):
+    return isinstance(x, int) and not isinstance(x, bool)
+
+
 def validar(ruta):
-    """Devuelve la lista de errores del contrato (vacía si es válido)."""
+    """Devuelve la lista de errores del contrato (vacía si es válido).
+
+    Además de las claves, chequea los tipos: el resultado de un PR se publica en
+    Pages, y un string donde va un número rompería el ranking o terminaría en el HTML.
+    """
     errores = []
     try:
         d = json.loads(Path(ruta).read_text())
@@ -30,6 +38,16 @@ def validar(ruta):
                   'tiempo_total_s', 'tiempo_ultimo_reporte_que_puntua_s'):
         if clave not in d:
             errores.append(f'falta la clave {clave!r}')
+    for clave in ('tiempo_total_s', 'tiempo_ultimo_reporte_que_puntua_s'):
+        if d.get(clave) is not None and not es_numero(d[clave]):
+            errores.append(f'{clave} tiene que ser número o null')
+    for clave in ('equipo', 'termino_por'):
+        if d.get(clave) is not None and not isinstance(d[clave], str):
+            errores.append(f'{clave} tiene que ser texto o null')
+    if 'mapa_publicado' in d and not isinstance(d['mapa_publicado'], bool):
+        errores.append('mapa_publicado tiene que ser true o false')
+    if not isinstance(d.get('violaciones', []), list):
+        errores.append('violaciones tiene que ser una lista')
     if not isinstance(d.get('puntaje'), dict):
         errores.append('puntaje tiene que ser un objeto')
     else:
@@ -38,12 +56,26 @@ def validar(ruta):
                       'penalizacion_salida', 'anulada'):
             if clave not in p:
                 errores.append(f'falta puntaje.{clave}')
-        if isinstance(p.get('por_victima'), list):
-            for r in p['por_victima']:
-                if not isinstance(r, dict) or 'indice' not in r or 'puntos' not in r:
+        for clave in ('total', 'penalizacion_colisiones', 'penalizacion_salida'):
+            if clave in p and not es_entero(p[clave]):
+                errores.append(f'puntaje.{clave} tiene que ser entero')
+        if 'anulada' in p and not isinstance(p['anulada'], bool):
+            errores.append('puntaje.anulada tiene que ser true o false')
+        if not isinstance(p.get('por_victima', []), list):
+            errores.append('puntaje.por_victima tiene que ser una lista')
+        else:
+            for r in p.get('por_victima', []):
+                if (not isinstance(r, dict) or not es_entero(r.get('indice'))
+                        or not es_entero(r.get('puntos'))
+                        or not (r.get('distancia') is None or es_numero(r['distancia']))
+                        or not (r.get('indice_reporte') is None or es_entero(r['indice_reporte']))):
                     errores.append(f'reporte por víctima mal formado: {r!r}')
                     break
-        for r in d.get('reportes', []):
+        reportes = d.get('reportes', [])
+        if not isinstance(reportes, list):
+            errores.append('reportes tiene que ser una lista')
+            reportes = []
+        for r in reportes:
             if not isinstance(r, dict):
                 errores.append(f'reporte mal formado: {r!r}')
                 break

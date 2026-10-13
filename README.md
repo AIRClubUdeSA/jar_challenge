@@ -97,7 +97,9 @@ Usá `armar_reporte` de [reportes.py](src/equipo_jar/equipo_jar/reportes.py): co
 
 ## Leaderboard de práctica
 
-Cada corrida puntuada del CI aparece en la [tabla de práctica](https://airclub-udesa.github.io/jar_challenge/): puntaje por equipo (mejor corrida), página por corrida con desglose, gráfico y links a los artefactos. Además el CI comenta tu PR con el puntaje y el gráfico. Son mundos de práctica: la tabla oficial del evento se publica aparte.
+Después de cada corrida del CI, tu PR recibe un comentario con el puntaje y el gráfico de cada mapa (es un solo comentario que se actualiza en cada push). Si el CI quedó en verde, la corrida entra a la [tabla de práctica](https://airclub-udesa.github.io/jar_challenge/): una tabla por mapa, con la mejor corrida de cada equipo, y una página por corrida con el desglose. El nombre que aparece es el de tu `equipo.yaml`.
+
+Si tu PR modifica `tools/` o `.github/`, sus corridas no se publican. Son mundos de práctica: la tabla oficial del evento se publica aparte.
 
 ## Contacto
 
