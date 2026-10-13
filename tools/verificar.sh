@@ -103,8 +103,9 @@ if [[ -f install/setup.bash ]]; then
   paso "El launch espera el mapa (sin simulador)" espera_del_mapa
 fi
 if [[ -n "$JUEZ" ]]; then
-  paso "Tests del puntaje y del ranking" \
-    python3 -m pytest -p no:anyio -q tools/tests/test_puntaje.py tools/tests/test_ranking.py
+  paso "Tests del puntaje, del ranking y del publicador" \
+    python3 -m pytest -p no:anyio -q tools/tests/test_puntaje.py tools/tests/test_ranking.py \
+      tools/tests/test_publicar.py
   paso "Juez de punta a punta (equipo falso, sin simulador)" python3 tools/tests/e2e_juez.py
 fi
 for mundo in "${MUNDOS[@]:-}"; do

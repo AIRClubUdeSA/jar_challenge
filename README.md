@@ -95,6 +95,12 @@ El detalle fino de las revisiones contra el hardcodeo no se publica. La organiza
 
 Usá `armar_reporte` de [reportes.py](src/equipo_jar/equipo_jar/reportes.py): construye el mensaje con el formato oficial (`PointStamped`, `frame_id: map`, `x` e `y` en metros) y rechaza valores inválidos. Recordá que **cada mensaje en `/victimas` gasta un reporte**, puntúe o no.
 
+## Leaderboard de práctica
+
+Después de cada corrida del CI, tu PR recibe un comentario con el puntaje y el gráfico de cada mapa (es un solo comentario que se actualiza en cada push). Si el CI quedó en verde, la corrida entra a la [tabla de práctica](https://airclub-udesa.github.io/jar_challenge/): una tabla por mapa, con la mejor corrida de cada equipo, y una página por corrida con el desglose. El nombre que aparece es el de tu `equipo.yaml`.
+
+Si tu PR modifica `tools/` o `.github/`, sus corridas no se publican. Son mundos de práctica: la tabla oficial del evento se publica aparte.
+
 ## Contacto
 
 [POR CONFIRMAR: casilla de contacto del club.]
